@@ -18,7 +18,7 @@ func RescaleArrayToBounds(bound_start float64, bound_end float64, points []float
 
 func Rescale(line_start float64, line_end float64, length int, point int) float64 {
 	step := (line_end - line_start) / float64(length)
-	line_focal_point := (line_end - line_start) / 2.0
+	line_focal_point := (line_end + line_start) / 2.0
 	 
 	return line_focal_point + (float64(point) - (float64(length)/2.0)) * step
 }

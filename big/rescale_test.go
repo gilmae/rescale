@@ -6,8 +6,10 @@ import (
 )
 
 func TestRescale_Shrink(t *testing.T) {
-	new_point := Rescale(*big.NewFloat(0.0), *big.NewFloat(10.0), 100, 50)
-	expected_new_point := big.NewFloat(5.0)
+	line_start := big.NewFloat(0.0).SetPrec(50)
+	line_end := big.NewFloat(10.0).SetPrec(50)
+	new_point := Rescale(*line_start, *line_end, 100, 41)
+	expected_new_point := big.NewFloat(4.1).SetPrec(50)
 	
 	if (new_point.Cmp(expected_new_point) != 0) {
 		t.Errorf("New point was incorrect, got: %s, want: %s.", new_point.Text('e', 20), expected_new_point.Text('e', 20))

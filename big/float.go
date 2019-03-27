@@ -1,5 +1,9 @@
 package rescale
 
+import (
+	"math/big"
+)
+
 func RescaleArrayToBounds(bound_start float64, bound_end float64, points []float64) []float64 {
 	old_min := points[0]
 	old_max := points[len(points) - 1]
@@ -16,11 +20,26 @@ func RescaleArrayToBounds(bound_start float64, bound_end float64, points []float
   	return mapped
 }
 
-func Rescale(line_start float64, line_end float64, length int, point int) float64 {
-	step := (line_end - line_start) / float64(length)
-	line_focal_point := (line_end + line_start) / 2.0
+func Rescale(line_start big.Float, line_end big.Float, length int, point int) big.Float {
+	step := new (big.Float)
+	step.Sub(&line_end, &line_start)
+	step.Quo(step,  big.NewFloat(float64(length)))
+
+	half := new(big.Float)
+	half.SetFloat64(0.5)
+
+	line_focal_point := new(big.Float)
+	line_focal_point.Add(&line_end, &line_start)
+	line_focal_point.Mul(line_focal_point, half)
+
+	half_length := new(big.Float)
+	half_length.Mul(big.NewFloat(float64(length)), half)
+	
+	line_focal_point.Add(line_focal_point, big.NewFloat(float64(point)))
+	line_focal_point.Sub(line_focal_point, half_length)
+	line_focal_point.Mul(line_focal_point, step)
 	 
-	return line_focal_point + (float64(point) - (float64(length)/2.0)) * step
+	return *line_focal_point
 }
   
 func GetZoomedBounds(original_start float64, original_end float64, focal_point float64, zoom float64) (float64,float64) {
